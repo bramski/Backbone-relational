@@ -1228,7 +1228,15 @@
 						return model.fetch( opts );
 					}, this );
 				}
-			}
+			} else if ( rel.related instanceof Backbone.Collection &&
+                                    rel.reverseRelation){
+                          var sourceId = rel.reverseRelation.sourceId || rel.reverseRelation.key + "_id";                                    
+                          var opts = _.defaults({},options);
+                          
+                          opts.data || ( opts.data = {} );
+                          opts.data[sourceId] = this.get(this.idAttribute);
+                          return rel.related.fetch(options);
+                        }
 			
 			return requests;
 		},
