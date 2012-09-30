@@ -1229,13 +1229,17 @@
 					}, this );
 				}
 			} else if ( rel.related instanceof Backbone.Collection &&
-                                    rel.reverseRelation){
+                                    rel.reverseRelation && !( rel.keyContents || options.update) ){
                           var sourceId = rel.reverseRelation.sourceId || rel.reverseRelation.key + "_id";                                    
-                          var opts = _.defaults({},options);
+                          var opts = _.defaults({
+                            success: function() {
+                              rel.keyContents = rel.related;
+                            }
+                          },options);
                           
                           opts.data || ( opts.data = {} );
                           opts.data[sourceId] = this.get(this.idAttribute);
-                          return rel.related.fetch(options);
+                          return rel.related.fetch(opts);
                         }
 			
 			return requests;
